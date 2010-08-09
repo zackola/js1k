@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  </head>
+  <body>
+    <canvas id="canvas" width="512" height="512" style="border:1px solid #EFEFEF;">
+    </canvas>
+    <script>
+      var canvas  = document.getElementById("canvas");
+      var context = canvas.getContext("2d");
+      
+      var random_color = function() {
+        return ([random_number(255), random_number(255), random_number(255)]);
+      };
+      
+      var random_number = function(max) {
+        return (Math.ceil(Math.random() * max));
+      };
+      
+      var css_color = function(color) {
+        var c = 'rgb(' + (color[0] || 0) + ',' + (color[1] || 0) + ',' + (color[2] || 0) + ')';
+        return (c);
+      };
+      
+      var average_colors = function(array) {
+        var num     = array.length;
+        var r_total = 0;
+        var g_total = 0;
+        var b_total = 0;
+        
+        for(var color in array) {
+          r_total += array[color][0];
+          g_total += array[color][1];
+          b_total += array[color][2];
+        }
+        return ([Math.floor(r_total / num), Math.floor(g_total / num), Math.floor(b_total / num)]);
+      };
+      
+      var displace = function(x) {
+        //var max = x / (512 + 512) * 20;
+        var max = 200;
+        var r = random_number(max)
+        return (r);
+      }
+      
+      var iterate = function(r, c) {
+        var x = r[0];
+        var y = r[1];
+        var width = r[2];
+        var height = r[3];
+        var new_width  = width / 2;
+        var new_height = height / 2;
+        
+        if (width > 1 || height > 1) {
+          var e_1, e_2, e_3, e_4;
+          var middle = (average_colors(c));
+          var displacement = displace(new_width + new_height);
+          middle[0] += displacement;
+          middle[1] += displacement;
+          middle[2] += displacement;
+          
+          e_1 = average_colors([c[0], c[1]]);
+          e_2 = average_colors([c[1], c[2]]);
+          e_3 = average_colors([c[2], c[3]]);
+          e_4 = average_colors([c[3], c[0]]);
+          
+          iterate([x, y, new_width, new_height], [c_1, e_1, middle, e_4]);          
+          iterate([x + new_width, y, new_width, new_height], [e_1, c_2, e_2, middle]);
+          iterate([x + new_width, y + new_height, new_width, new_height], [middle, e_2, c_3, e_3]);
+          iterate([x, y + new_height, new_width, new_height], [e_4, middle, e_3, c_4]);
+        } else {
+          var c_avg = average_colors([c[0], c[1], c[2], c[3]]);
+          context.fillStyle = css_color(c_avg);
+          context.fillRect(x, y, 2, 2);
+        }
+      };
+
+      var c_1 = random_color();
+      var c_2 = random_color();
+      var c_3 = random_color();
+      var c_4 = random_color();
+      
+      var colors = [c_1, c_2, c_3, c_4];
+      var rect   = [0, 0, 512, 512];
+      iterate(rect, colors);
+    </script>
+  </body>
+</html>
