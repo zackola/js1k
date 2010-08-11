@@ -3,7 +3,7 @@
   <head>
   </head>
   <body>
-    <canvas id="canvas" width="512" height="512" style="border:1px solid #333;">
+    <canvas id="canvas" width="256" height="256">
     </canvas>
     <script>
       var random_color = function() {
@@ -11,8 +11,9 @@
       };
       
       var displace = function(x) {
-        var i = (x / (width + height)) * 3;
-        return (random_number(i));
+        // var i = (x / (width + height)) * 100;
+        var i = random_number(20);
+        return (random_number( (i % 2 == 0) ? i : -i ));
       };
       
       var random_number = function(max) {
@@ -46,9 +47,25 @@
           var midpoint = average_colors([c1, c2, c3, c4]);
           var displacement = displace(new_w + new_h);
 
-          midpoint[0] += displacement;
-          midpoint[1] += displacement;
-          midpoint[2] += displacement;
+          midpoint[0] += displace(new_w + new_h);
+          midpoint[1] += displace(new_w + new_h);
+          midpoint[2] += displace(new_w + new_h);
+          
+          if (midpoint[0] < 0) {
+            midpoint[0] = 0
+          } else if (midpoint[0] > 255) {
+            midpoint[0] = 255
+          }
+          if (midpoint[1] < 0) {
+            midpoint[1] = 0
+          } else if (midpoint[1] > 255) {
+            midpoint[1] = 255
+          }
+          if (midpoint[2] < 0) {
+            midpoint[2] = 0
+          } else if (midpoint[2] > 255) {
+            midpoint[2] = 255
+          }
           
           var e1 = average_colors([c1, c2]);
           var e2 = average_colors([c2, c3]);
@@ -78,17 +95,17 @@
         }
       }
       
-      var _c1 = [255, 0, 0];
-      var _c2 = [255, 0, 0];
-      var _c3 = [0, 255, 0];
-      var _c4 = [0, 0, 255];
+      var _c1 = random_color(); // [255, 0, 0];
+      var _c2 = random_color(); // [255, 0, 0];
+      var _c3 = random_color(); // [0, 0, 255];
+      var _c4 = random_color(); // [0, 0, 255];
       
       iterate(0, 0, width, height, _c1, _c2, _c3, _c4);
       
       for (var y = 0; y < height; y++) {
         for (var x = 0; x < width; x++) {
           context.fillStyle = css_color(map[y][x]);
-          context.fillRect(x, y, 1, 1);
+          context.fillRect(x, y, 1.5, 1.5);
         }
       }
       
