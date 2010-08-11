@@ -6,24 +6,14 @@ a = function() {
     var red   = (c < 0.5) ? (c * 2) : ((1.0 - c) * 2);
     var green = (c >= 0.3 && c < 0.8) ? ((c - 0.3) * 2) : (c < 0.3) ? ((0.3 - c) * 2) : (1.3 - c) * 2;
     var blue  = (c >= 0.5) ? ((c - 0.5) * 2) : ((0.5 - c) * 2);
-    return [m.round(red * 255), m.round(green * 255), m.round(blue * 255)];
+    return ('rgb(' + m.round(red * 255) + ',' + m.round(green * 255) + ',' + m.round(blue * 255) + ')');
   }
-
-  var random_color = function() {
-    return (m.random());
-  };
 
   var displace = function(num){
     var max = num / (width + height) * 10;
     return (m.random() - 0.5) * max;
   };
 
-  var css_color = function(color) {
-    color = compute_color(color);
-    var c = 'rgb(' + color[0] + ',' + color[1] + ',' + color[2] + ')';
-    return (c);
-  };
-      
   var average_colors = function(array) {
     var num     = array.length;
     var total   = 0;
@@ -57,11 +47,38 @@ a = function() {
       map[y][x] = average_colors([c1, c2, c3, c4]);
     }
   };
+  
+  var cycle = function() {
+    console.log('cycle');
+    for (var y = 0; y < height; y++) {
+      var f = map[y].shift();
+      map[y].push(f);
+    }
+    render();
+  }
+  
+  var render = function() {
+    for (var y = 0; y < height; y++) {
+      for (var x = 0; x < width; x++) {
+        context.fillStyle = compute_color(map[y][x]);
+        context.fillRect(x, y, 1, 1);
+      }
+    }
+    // setTimeout(function() { cycle(); }, 1);
+  }
+  
+  var go = function() {
+    iterate(0, 0, width, height, m.random(), m.random(), m.random(), m.random());
+    render();
+  }
 
-  var canvas  = document.getElementById("canvas");
+  var canvas  = document.getElementById("c");
+  canvas.onclick = 'cycle();';
   var context = canvas.getContext("2d");
-  var width   = canvas.width;
-  var height  = canvas.height;
+  var width   = 128;
+  var height  = 128;
+  canvas.width = width;
+  canvas.height = height;
 
   var map = new Array(height);
   for (var y = 0; y < height; y++) {
@@ -71,17 +88,5 @@ a = function() {
     }
   }
 
-  var _c1 = random_color();
-  var _c2 = random_color();
-  var _c3 = random_color();
-  var _c4 = random_color();
-
-  iterate(0, 0, width, height, _c1, _c2, _c3, _c4);
-
-  for (var y = 0; y < height; y++) {
-    for (var x = 0; x < width; x++) {
-      context.fillStyle = css_color(map[y][x]);
-      context.fillRect(x, y, 1, 1);
-    }
-  }
+  go();
 }();
