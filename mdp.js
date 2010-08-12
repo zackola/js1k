@@ -1,17 +1,20 @@
 a = function() {
-  m = Math;
+  var m = Math;
+  var r = m.random;
+  var R = m.round;
+  var f = m.floor;
 
   var compute_color = function(c)
   {   
     var red   = (c < 0.5) ? (c * 2) : ((1.0 - c) * 2);
     var green = (c >= 0.3 && c < 0.8) ? ((c - 0.3) * 2) : (c < 0.3) ? ((0.3 - c) * 2) : (1.3 - c) * 2;
     var blue  = (c >= 0.5) ? ((c - 0.5) * 2) : ((0.5 - c) * 2);
-    return 'rgb(' + m.round(red * 255) + ',' + m.round(green * 255) + ',' + m.round(blue * 255) + ')';
+    return 'rgb(' + R(red * 255) + ',' + R(green * 255) + ',' + R(blue * 255) + ')';
   };
 
   var displace = function(num){
     var max = num / (width + height) * 10;
-    return (m.random() - 0.5) * max;
+    return (r() - 0.5) * max;
   };
 
   var average_colors = function(array) {
@@ -25,8 +28,8 @@ a = function() {
 
   var iterate = function(x, y, w, h, c1, c2, c3, c4) {
     if (w > 1 || h > 1) {
-      var new_w = m.floor(w / 2);
-      var new_h = m.floor(h / 2);
+      var new_w = f(w / 2);
+      var new_h = f(h / 2);
 
       var midpoint = average_colors([c1, c2, c3, c4]) + displace(new_w + new_h);
       if (midpoint < 0)
@@ -71,7 +74,7 @@ a = function() {
   };
   
   var go = function() {
-    iterate(0, 0, width, height, m.random(), m.random(), m.random(), m.random());
+    iterate(0, 0, width, height, r(), r(), r(), r());
     render();
   };
 
