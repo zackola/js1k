@@ -67,7 +67,7 @@ a = function() {
       for (var x = 0; x < width; x++) {
         context.scale(0.5);
         context.fillStyle = compute_color(map[y][x]);
-        context.fillRect(x + x*scale, y + y*scale, scale, scale);
+        context.fillRect(x + x*scale, y + y*scale, scale + 1, scale + 1);
       }
     }
     setTimeout(function() { cycle(); }, 50);
@@ -77,14 +77,18 @@ a = function() {
     iterate(0, 0, width, height, r(), r(), r(), r());
     render();
   };
+  
+  with (document.body.style) {
+    backgroundColor = '#000';
+    textAlign = 'center';
+  }
 
   var canvas  = document.getElementById("c");
   var context = canvas.getContext("2d");
   var i_w  = window.innerWidth-20;
   var i_h  = window.innerHeight-20;
   var biggest  = (i_w >= i_h) ? i_h : i_w;
-  var width   = 128;
-  var height  = 128;
+  var width = height = 128;
   var scale   = biggest / width;
   canvas.width = biggest;
   canvas.height = biggest;
