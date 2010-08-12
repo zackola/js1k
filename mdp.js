@@ -10,7 +10,7 @@ a = function() {
   };
 
   var displace = function(num){
-    var max = num / (width + height) * 10;
+    var max = num / width * 2 * 10;
     return (r() - .5) * max;
   };
 
@@ -49,7 +49,7 @@ a = function() {
   };
   
   var cycle = function() {
-    for (var y = 0; y < height; y++)
+    for (var y = 0; y < width; y++)
       for (var x = 0; x < width; x++) {
         map[y][x] += .02;
         if (map[y][x] > 1) 
@@ -59,7 +59,7 @@ a = function() {
   };
   
   var render = function() {
-    for (var y = 0; y < height; y++) 
+    for (var y = 0; y < width; y++) 
       for (var x = 0; x < width; x++) {
         context.fillStyle = compute_color(map[y][x]);
         context.fillRect(x + x*scale, y + y*scale, scale, scale);
@@ -68,7 +68,7 @@ a = function() {
   };
   
   var go = function() {
-    iterate(0, 0, width, height, r(), r(), r(), r());
+    iterate(0, 0, width, width, r(), r(), r(), r());
     render();
   };
   
@@ -79,13 +79,12 @@ a = function() {
   var i_w  = innerWidth - 20;
   var i_h  = innerHeight - 20;
   var biggest  = (i_w >= i_h) ? i_h : i_w;
-  var width = 128; 
-  var height = 128;
+  var width = 128;
   var scale   = biggest / width + 1;
   canvas.height = canvas.width = biggest;
 
   var map = [];
-  for (var y = 0; y < height; y++) {
+  for (var y = 0; y < width; y++) {
     map[y] = [];
   }
 
