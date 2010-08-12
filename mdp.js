@@ -67,7 +67,7 @@ a = function() {
       for (var x = 0; x < width; x++) {
         context.scale(0.5);
         context.fillStyle = compute_color(map[y][x]);
-        context.fillRect(x, y, 1, 1);
+        context.fillRect(x + x*scale, y + y*scale, scale, scale);
       }
     }
     setTimeout(function() { cycle(); }, 50);
@@ -80,10 +80,14 @@ a = function() {
 
   var canvas  = document.getElementById("c");
   var context = canvas.getContext("2d");
-  var width   = 256;
-  var height  = 256;
-  canvas.width = width;
-  canvas.height = height;
+  var i_w  = window.innerWidth-20;
+  var i_h  = window.innerHeight-20;
+  var biggest  = (i_w >= i_h) ? i_h : i_w;
+  var width   = 128;
+  var height  = 128;
+  var scale   = biggest / width;
+  canvas.width = biggest;
+  canvas.height = biggest;
 
   var map = new Array(height);
   for (var y = 0; y < height; y++) {
