@@ -1,20 +1,17 @@
 a = function() {
-  var m = Math;
-  var r = m.random;
-  var R = m.round;
-  var f = m.floor;
-
+  with(Math)r=random,R=round,f=floor;
+  
   var compute_color = function(c)
   {   
-    var red   = (c < 0.5) ? (c * 2) : ((1.0 - c) * 2);
-    var green = (c >= 0.3 && c < 0.8) ? ((c - 0.3) * 2) : (c < 0.3) ? ((0.3 - c) * 2) : (1.3 - c) * 2;
-    var blue  = (c >= 0.5) ? ((c - 0.5) * 2) : ((0.5 - c) * 2);
+    var red   = (c < .5) ? (c * 2) : ((1 - c) * 2);
+    var green = (c >= .3 && c < .8) ? ((c - .3) * 2) : (c < .3) ? ((.3 - c) * 2) : (1.3 - c) * 2;
+    var blue  = (c >= .5) ? ((c - .5) * 2) : ((.5 - c) * 2);
     return 'rgb(' + R(red * 255) + ',' + R(green * 255) + ',' + R(blue * 255) + ')';
   };
 
   var displace = function(num){
     var max = num / (width + height) * 10;
-    return (r() - 0.5) * max;
+    return (r() - .5) * max;
   };
 
   var average_colors = function(array) {
@@ -34,8 +31,8 @@ a = function() {
       var midpoint = average_colors([c1, c2, c3, c4]) + displace(new_w + new_h);
       if (midpoint < 0)
         midpoint = 0;
-      else if (midpoint > 1.0)
-        midpoint = 1.0;
+      else if (midpoint > 1)
+        midpoint = 1;
     
       var e1 = average_colors([c1, c2]);
       var e2 = average_colors([c2, c3]);
@@ -52,24 +49,22 @@ a = function() {
   };
   
   var cycle = function() {
-    for (var y = 0; y < height; y++) {
+    for (var y = 0; y < height; y++)
       for (var x = 0; x < width; x++) {
-        map[y][x] += 0.02;
-        if (map[y][x] > 1.0) 
-          map[y][x] = 0.0;
+        map[y][x] += .02;
+        if (map[y][x] > 1) 
+          map[y][x] = 0;
       }
-    }
     render();
   };
   
   var render = function() {
-    for (var y = 0; y < height; y++) {
+    for (var y = 0; y < height; y++) 
       for (var x = 0; x < width; x++) {
         context.fillStyle = compute_color(map[y][x]);
-        context.fillRect(x + x*scale, y + y*scale, scale + 1, scale + 1);
+        context.fillRect(x + x*scale, y + y*scale, scale, scale);
       }
-    }
-    setTimeout(function() { cycle(); }, 50);
+    setTimeout(cycle, 50);
   };
   
   var go = function() {
@@ -77,18 +72,16 @@ a = function() {
     render();
   };
   
-  with (document.body.style) {
-    backgroundColor = '#000';
-    textAlign = 'center';
-  }
+  with (document.body.style)backgroundColor = '#000',textAlign = 'center';
 
   var canvas  = document.getElementById("c");
   var context = canvas.getContext("2d");
-  var i_w  = window.innerWidth-20;
-  var i_h  = window.innerHeight-20;
+  var i_w  = innerWidth - 20;
+  var i_h  = innerHeight - 20;
   var biggest  = (i_w >= i_h) ? i_h : i_w;
-  var width = height = 128;
-  var scale   = biggest / width;
+  var width = 128; 
+  var height = 128;
+  var scale   = biggest / width + 1;
   canvas.height = canvas.width = biggest;
 
   var map = [];
