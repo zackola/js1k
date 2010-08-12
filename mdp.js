@@ -20,7 +20,7 @@ a = function() {
     for(var i = 0; i < num; i++ ) {
       total += array[i];
     }
-    return (total / num);
+    return total / num;
   };
 
   var iterate = function(x, y, w, h, c1, c2, c3, c4) {
