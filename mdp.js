@@ -65,7 +65,6 @@ a = function() {
   var render = function() {
     for (var y = 0; y < height; y++) {
       for (var x = 0; x < width; x++) {
-        context.scale(0.5);
         context.fillStyle = compute_color(map[y][x]);
         context.fillRect(x + x*scale, y + y*scale, scale + 1, scale + 1);
       }
@@ -90,12 +89,11 @@ a = function() {
   var biggest  = (i_w >= i_h) ? i_h : i_w;
   var width = height = 128;
   var scale   = biggest / width;
-  canvas.width = biggest;
-  canvas.height = biggest;
+  canvas.height = canvas.width = biggest;
 
-  var map = new Array(height);
+  var map = [];
   for (var y = 0; y < height; y++) {
-    map[y] = new Array(width);
+    map[y] = [];
   }
 
   go();
