@@ -6,8 +6,8 @@ a = function() {
     var red   = (c < 0.5) ? (c * 2) : ((1.0 - c) * 2);
     var green = (c >= 0.3 && c < 0.8) ? ((c - 0.3) * 2) : (c < 0.3) ? ((0.3 - c) * 2) : (1.3 - c) * 2;
     var blue  = (c >= 0.5) ? ((c - 0.5) * 2) : ((0.5 - c) * 2);
-    return ('rgb(' + m.round(red * 255) + ',' + m.round(green * 255) + ',' + m.round(blue * 255) + ')');
-  }
+    return 'rgb(' + m.round(red * 255) + ',' + m.round(green * 255) + ',' + m.round(blue * 255) + ')';
+  };
 
   var displace = function(num){
     var max = num / (width + height) * 10;
@@ -49,43 +49,42 @@ a = function() {
   };
   
   var cycle = function() {
-    console.log('cycle');
     for (var y = 0; y < height; y++) {
-      var f = map[y].shift();
-      map[y].push(f);
+      for (var x = 0; x < width; x++) {
+        map[y][x] += 0.02;
+        if (map[y][x] > 1.0) 
+          map[y][x] = 0.0;
+      }
     }
     render();
-  }
+  };
   
   var render = function() {
     for (var y = 0; y < height; y++) {
       for (var x = 0; x < width; x++) {
+        context.scale(0.5);
         context.fillStyle = compute_color(map[y][x]);
         context.fillRect(x, y, 1, 1);
       }
     }
-    // setTimeout(function() { cycle(); }, 1);
-  }
+    setTimeout(function() { cycle(); }, 50);
+  };
   
   var go = function() {
     iterate(0, 0, width, height, m.random(), m.random(), m.random(), m.random());
     render();
-  }
+  };
 
   var canvas  = document.getElementById("c");
-  canvas.onclick = 'cycle();';
   var context = canvas.getContext("2d");
-  var width   = 128;
-  var height  = 128;
+  var width   = 256;
+  var height  = 256;
   canvas.width = width;
   canvas.height = height;
 
   var map = new Array(height);
   for (var y = 0; y < height; y++) {
     map[y] = new Array(width);
-    for (var x = 0; x < width; x++) {
-      map[y][x] = 0;
-    }
   }
 
   go();
